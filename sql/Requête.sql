@@ -140,16 +140,60 @@ SELECT DISTINCT
     p1.Adresse AS Ville
 FROM pilote p1
 JOIN pilote p2
-    ON p1.Adresse = p2.Adresse;
-
+		ON p1.Adresse = p2.Adresse
+		AND p1.PIL_ID < p2.PIL_ID;
 
    
 
 
 /* 12 Quels sont les noms des pilotes qui conduisent un avion que conduit aussi le pilote n°1 ? */
 
+SELECT DISTINCT 
+	    pilote.Nom,
+	    pilote.Adresse
+FROM pilote, vol
+AND vol.Avion_ID IN (
+WHERE pilote.PIL_ID = vol.Pilote_ID
+	 
+	 SELECT v1.Avion_ID
+    FROM VOL v1
+    WHERE v1.Pilote_ID = 1
+	 
+	 )
+AND pilote.PIL_ID <> 1;
 
-/* 13 Donner toutes les paires de villes telles qu'un avion localisé dans la ville de départ soit conduit par un pilote résidant dans la ville d'arrivée. */
+
+
+
+/* 13 Donner toutes les paires de villes telles qu'un avion localisé
+dans la ville de départ soit conduit par un pilote résidant dans la ville d'arrivée. */
+
+SELECT DISTINCT
+    avion.Localisation AS "Ville de Depart",
+    pilote.Adresse AS "Ville de Residence du Pilote",
+    pilote.Nom
+FROM avion
+INNER JOIN vol ON avion.AV_ID = vol.Avion_ID
+INNER JOIN pilote ON vol.Pilote_ID = pilote.PIL_ID
+WHERE avion.Localisation = vol.VilleDepart
+AND pilote.Adresse = vol.VilleArrivee;
+
 
 
 /* 14 Sélectionner les numéros des pilotes qui conduisent tous les Airbus ? */
+
+
+SELECT Pilote_ID
+FROM vol, pilote
+WHERE Avion_ID IN ( /*filtrer les avions qui sont un AIRBUS*/
+    SELECT AV_ID
+    FROM avion
+    WHERE Marque = 'AIRBUS'
+)
+GROUP BY Pilote_ID
+HAVING COUNT(DISTINCT Avion_ID) = (
+    SELECT COUNT(DISTINCT AV_ID)
+    FROM avion
+    WHERE Marque = 'AIRBUS'
+);
+
