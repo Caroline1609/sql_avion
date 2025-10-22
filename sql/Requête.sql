@@ -110,7 +110,7 @@ WHERE	pilote.PIL_ID IN ( -- Le pilote conduit un Airbus
      JOIN avion ON vol.Avion_ID = avion.AV_ID
      WHERE avion.Marque = 'AIRBUS'
 )
-AND pilote.Adresse IN (	-- et dont le pilote n'habite pas dans une ville où un Airbus est localisé
+AND pilote.Adresse NOT IN (	-- et dont le pilote n'habite pas dans une ville où un Airbus est localisé
 
 		SELECT Localisation
 		FROM avion
@@ -119,8 +119,22 @@ AND pilote.Adresse IN (	-- et dont le pilote n'habite pas dans une ville où un 
 
 /* 10 Quels sont les vols ayant un trajet identique ( VD, VA ) à ceux assurés par Serge ? */
 
+SELECT *
+FROM vol
+WHERE (VilleDepart, VilleArrivee) IN (
+    SELECT VilleDepart, VilleArrivee
+    FROM vol
+    WHERE Pilote_ID = (
+        SELECT PIL_ID
+        FROM pilote
+        WHERE Nom = 'SERGE'
+    )
+);
+
 
 /* 11 Donner toutes les paires de pilotes habitant la même ville (sans doublon). */
+
+
 
 
 /* 12 Quels sont les noms des pilotes qui conduisent un avion que conduit aussi le pilote n°1 ? */
