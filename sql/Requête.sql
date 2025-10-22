@@ -134,7 +134,16 @@ WHERE (VilleDepart, VilleArrivee) IN (
 
 /* 11 Donner toutes les paires de pilotes habitant la même ville (sans doublon). */
 
+SELECT DISTINCT
+    p1.Nom AS Pilote1,
+    p2.Nom AS Pilote2,
+    p1.Adresse AS Ville
+FROM pilote p1
+JOIN pilote p2
+    ON p1.Adresse = p2.Adresse;
 
+
+   
 
 
 /* 12 Quels sont les noms des pilotes qui conduisent un avion que conduit aussi le pilote n°1 ? */
